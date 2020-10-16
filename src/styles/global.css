@@ -1,0 +1,15 @@
+.tagName {
+    color: rgb(10,10,10);
+}
+
+.tagName:hover {
+    background-color: rgb(73, 69, 69);
+    color: rgb(253, 250, 250);
+}
+
+.tagIcon {
+    color: rgb(69,69,69);
+}
+.tagIcon:hover {
+    color: rgb(0,122,204);
+}
