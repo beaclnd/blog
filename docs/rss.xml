@@ -1,4 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[JayTsang's Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsby-starter-blog-demo.netlify.com</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 01 Dec 2020 02:25:08 GMT</lastBuildDate><item><title><![CDATA[笔记： 踩坑——Docker基于URL进行Build时出错]]></title><description><![CDATA[环境 问题描述 使用docker-compose运行容器，在此过程中需要向远程代码库获取源码以Build镜像，结果输出错误信息： 解决方法 经过一番google后，发现是由于使用的Docker版本与Git版本不匹配导致的。 因为Docker 19在运行之后还会运行命令, 若Git…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/note-docker-build-with-url-error-initializing-submodules/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/note-docker-build-with-url-error-initializing-submodules/</guid><pubDate>Tue, 01 Dec 2020 08:51:42 GMT</pubDate><content:encoded>&lt;h3&gt;环境&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[JayTsang's Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsby-starter-blog-demo.netlify.com</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 11 Jul 2021 07:17:36 GMT</lastBuildDate><item><title><![CDATA[为网站申请免费TLS/SSL证书]]></title><description><![CDATA[Let’s Encrypt是免费、开放和自动化的证书颁发机构，由非盈利组织互联网安全研究小组（ISRG）负责运营。Let’s Encrypt基于ACME协议，它自己维护了证书颁发机构服务，并为我们提供了证书管理软件(ACME 客户端)，能够自动化申请域名证书，其工作原理主要分为…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/free-tls-certificate-with-letsencrypt/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/free-tls-certificate-with-letsencrypt/</guid><pubDate>Sun, 11 Jul 2021 08:51:42 GMT</pubDate><content:encoded>&lt;p&gt;&lt;a href=&quot;https://letsencrypt.org&quot;&gt;Let’s Encrypt&lt;/a&gt;是免费、开放和自动化的证书颁发机构，由非盈利组织互联网安全研究小组（ISRG）负责运营。Let’s Encrypt基于&lt;a href=&quot;https://tools.ietf.org/html/rfc8555&quot;&gt;ACME协议&lt;/a&gt;，它自己维护了证书颁发机构服务，并为我们提供了证书管理软件(ACME 客户端)，能够自动化申请域名证书，其&lt;a href=&quot;https://letsencrypt.org/zh-cn/how-it-works/&quot;&gt;工作原理&lt;/a&gt;主要分为2步:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;使用证书管理软件向证书颁发机构证明服务器对域名的拥有权&lt;/li&gt;
+&lt;li&gt;使用证书管理软件向证书颁发机构申请、续期或撤销域名证书&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在这里，我已经在阿里云上建立了一个云服务器（Ubuntu 16.04.3 LTS x86_64 + Nginx ）并绑定了域名，下面记录一下我为该域名申请免费证书的过程。&lt;/p&gt;
+&lt;h3&gt;安装证书管理软&lt;/h3&gt;
+&lt;p&gt;简单起见，我使用了&lt;a href=&quot;https://Snapcraft.io/docs/getting-started&quot;&gt;Snap&lt;/a&gt;来安装证书管理软件，Snap是Ubuntu的母公司Canonical推出的应用打包、安装及管理方案，可以跨各种Linux发现版本，咱也不用管各种依赖问题。&lt;/p&gt;
+&lt;p&gt;我的Ubuntu版本未自带Snapd服务，因此需要先安装Snapd：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ &lt;span class=&quot;token function&quot;&gt;apt&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; snapd
+$ &lt;span class=&quot;token assign-left variable&quot;&gt;&lt;span class=&quot;token environment constant&quot;&gt;PATH&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token environment constant&quot;&gt;$PATH&lt;/span&gt;:/snap/bin&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后安装证书管理软件certbot：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ snap &lt;span class=&quot;token function&quot;&gt;install&lt;/span&gt; --classic certbot&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;申请证书&lt;/h3&gt;
+&lt;p&gt;运行certbot申请证书并自动修改Nginx配置：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;$ certbot --nginx&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;输入邮箱信息&lt;/li&gt;
+&lt;li&gt;输入域名&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;certbot将自动修改Nginx的配置，包括80端口跳转及证书、私钥路径等，若想自己手动修改Nginx配置，可以运行:
+&lt;code class=&quot;language-text&quot;&gt;$ certbot certonly --nginx&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;默认已经开启自动更新证书，可以运行下列命令测试是否开启正常:
+&lt;code class=&quot;language-text&quot;&gt;$ certbot renew --dry-run&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;重启一下Nginx, 然后就可以通过HTTPS正常访问网站了:) &lt;/p&gt;
+&lt;h3&gt;参考链接&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx&quot;&gt;https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content:encoded></item><item><title><![CDATA[笔记： 踩坑——Docker基于URL进行Build时出错]]></title><description><![CDATA[环境 问题描述 使用docker-compose运行容器，在此过程中需要向远程代码库获取源码以Build镜像，结果输出错误信息： 解决方法 经过一番google后，发现是由于使用的Docker版本与Git版本不匹配导致的。 因为Docker 19在运行之后还会运行命令, 若Git…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/note-docker-build-with-url-error-initializing-submodules/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/note-docker-build-with-url-error-initializing-submodules/</guid><pubDate>Tue, 01 Dec 2020 08:51:42 GMT</pubDate><content:encoded>&lt;h3&gt;环境&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;- OS: Centos 7.9.2009
 - Docker: 19.03.13
 - docker-compose: 1.27.4&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -51,7 +84,7 @@ $ &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; --version
     &gt;
       &lt;a
     class=&quot;gatsby-resp-image-link&quot;
-    href=&quot;/blog/static/3efe58dd09cb861da037a04f63507af3/62452/hierarchy-certs.png&quot;
+    href=&quot;/static/3efe58dd09cb861da037a04f63507af3/62452/hierarchy-certs.png&quot;
     style=&quot;display: block&quot;
     target=&quot;_blank&quot;
     rel=&quot;noopener&quot;
@@ -64,10 +97,10 @@ $ &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; --version
         class=&quot;gatsby-resp-image-image&quot;
         alt=&quot;证书关系&quot;
         title=&quot;证书关系&quot;
-        src=&quot;/blog/static/3efe58dd09cb861da037a04f63507af3/62452/hierarchy-certs.png&quot;
-        srcset=&quot;/blog/static/3efe58dd09cb861da037a04f63507af3/12f09/hierarchy-certs.png 148w,
-/blog/static/3efe58dd09cb861da037a04f63507af3/e4a3f/hierarchy-certs.png 295w,
-/blog/static/3efe58dd09cb861da037a04f63507af3/62452/hierarchy-certs.png 331w&quot;
+        src=&quot;/static/3efe58dd09cb861da037a04f63507af3/62452/hierarchy-certs.png&quot;
+        srcset=&quot;/static/3efe58dd09cb861da037a04f63507af3/12f09/hierarchy-certs.png 148w,
+/static/3efe58dd09cb861da037a04f63507af3/e4a3f/hierarchy-certs.png 295w,
+/static/3efe58dd09cb861da037a04f63507af3/62452/hierarchy-certs.png 331w&quot;
         sizes=&quot;(max-width: 331px) 100vw, 331px&quot;
         style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
         loading=&quot;lazy&quot;
