@@ -18,6 +18,9 @@ $ <span class="token assign-left variable"><span class="token environment consta
 <h3>申请证书</h3>
 <p>运行certbot申请证书并自动修改Nginx配置：</p>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ certbot --nginx</code></pre></div>
+<blockquote>
+<p>nginx配置文件中的相应Server块需要指定对应的服务域名，如<code class="language-text">server_name abc.cn</code>否则certbot在申请完证书后无法自动更新nginx配置; </p>
+</blockquote>
 <p>然后：</p>
 <ul>
 <li>输入邮箱信息</li>

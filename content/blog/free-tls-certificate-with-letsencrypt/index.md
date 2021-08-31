@@ -31,6 +31,9 @@ $ snap install --classic certbot
 ```bash
 $ certbot --nginx
 ```
+
+> nginx配置文件中的相应Server块需要指定对应的服务域名，如`server_name abc.cn`否则certbot在申请完证书后无法自动更新nginx配置; 
+
 然后：
 - 输入邮箱信息
 - 输入域名
