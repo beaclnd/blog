@@ -1,10 +1,10 @@
 module.exports = {
   pathPrefix: "/blog",
   siteMetadata: {
-    title: `JayTsang's Blog`,
+    title: `beaclnd92's Blog`,
     author: {
-      name: `JayTsang`,
-      summary: `who lives and works in Beijing, China.`,
+      name: `beaclnd92`,
+      summary: `who keeps learning and thinking`,
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
     siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
