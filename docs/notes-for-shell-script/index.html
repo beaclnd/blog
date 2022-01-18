@@ -6,7 +6,7 @@
 <p>当在Linux Shell脚本中单个命令过长时，可以使用多行格式来表达，这样具有较好的可读性。若运行脚本后出现输入命令参数错误的提示，需要注意多行格式的正确性。</p>
 <p>单个命令以多行格式表示时，保证正确性需要注意的点：</p>
 <ul>
-<li>除了最后一行外，每行的末尾需要以反斜杠字符: ””为结束字符</li>
+<li>除了最后一行外，每行的末尾需要以反斜杠字符: ”\“为结束字符</li>
 <li>行末尾的反斜杠字符之后不可以存在任何空白字符，如空格等 </li>
 </ul>
 <h3>运行脚本的程序</h3>
@@ -26,6 +26,7 @@
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token function">bash</span> -c another.sh hello <span class="token number">2</span></code></pre></div>
 <h3>使用变量时字符串化</h3>
 <p>直接使用变量时的形式为：<code class="language-text">$VAR_TEST</code>，当该变量是字符串且含有空格时，若使用bash来执行脚本，在某些语句中会报错：bash: [: too many arguments。所以这种情况下，在使用时需要将变量字符串化，即：<code class="language-text">&quot;${VAR_TEST}&quot;</code></p>
+<p>对于字符串变量中含有特殊字符如<code class="language-text">!</code>、<code class="language-text">@</code>、<code class="language-text">#</code>及<code class="language-text">$</code>等，也应该对该变量字符串化，可使用单引号：<code class="language-text">&#39;${VAR_TEST}&#39;</code></p>
 <h3>出错退出</h3>
 <p>默认情况下，使用bash等程序执行脚本时，若中间命令执行出现错误，并不会使整个脚本终止，而是会继续执行，此时，可以在脚本首行使用命令:</p>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token builtin class-name">set</span> -e</code></pre></div>
