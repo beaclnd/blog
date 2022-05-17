@@ -1,4 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[beaclnd92's Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsby-starter-blog-demo.netlify.com</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 18 Jan 2022 07:49:30 GMT</lastBuildDate><item><title><![CDATA[笔记： 踩坑——Docker使用错误及经验总结]]></title><description><![CDATA[host网络模式 运行Docker容器时，可使用参数来使得可从容器内通过来访问宿主机中运行的其他服务，容器和宿主机将共享网络空间，也无需端口映射配置。 此外，使用host模式在容器内使用localhost或127.0.0.1访问宿主机服务只在Linux中有效。 Mac…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/notes-for-docker-usage/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/notes-for-docker-usage/</guid><pubDate>Sun, 17 Oct 2021 22:48:42 GMT</pubDate><content:encoded>&lt;h3&gt;host网络模式&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[beaclnd92's Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsby-starter-blog-demo.netlify.com</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 17 May 2022 04:34:19 GMT</lastBuildDate><item><title><![CDATA[笔记： 踩坑——使用git经ssh协议向远程推送或拉取代码库时出错]]></title><description><![CDATA[连接超时 由于某些原因会导致无法通过ssh协议访问远程服务，当基于ssh协议访问远端代码库时会出现连接ssh 22端口超时的问题，此时咱可以修改ssh配置通过https端口来建立ssh连接 如添加及修改配置文件~/.ssh/config…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/notes-for-git-with-ssh-failed/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/notes-for-git-with-ssh-failed/</guid><pubDate>Tue, 17 May 2022 11:28:34 GMT</pubDate><content:encoded>&lt;h3&gt;连接超时&lt;/h3&gt;
+&lt;p&gt;由于某些原因会导致无法通过ssh协议访问远程服务，当基于ssh协议访问远端代码库时会出现连接ssh 22端口超时的问题，此时咱可以修改ssh配置通过https端口来建立ssh连接&lt;/p&gt;
+&lt;p&gt;如添加及修改配置文件~/.ssh/config： &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Host github.com 
+    Hostname ssh.github.com
+    Port 443&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;无访问权限&lt;/h3&gt;
+&lt;p&gt;虽然能与远程服务成功建立ssh连接，但仍会出现访问远程代码库被拒绝的问题，如出现错误：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;Error: Permission denied (publickey)&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;此时，需要确保在本地生成正确的非对称密钥，并复制其中的公钥配置到远程服务端。&lt;/p&gt;
+&lt;p&gt;首先生成某种算法的非对称密钥，配置正确的comment，如：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;ssh-keygen -t ed25519 -C &lt;span class=&quot;token string&quot;&gt;&quot;myname@github.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后在本地添加该非对称密钥，如：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token builtin class-name&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;&lt;span class=&quot;token variable&quot;&gt;&lt;span class=&quot;token variable&quot;&gt;$(&lt;/span&gt;ssh-agent -s&lt;span class=&quot;token variable&quot;&gt;)&lt;/span&gt;&lt;/span&gt;&quot;&lt;/span&gt;
+ssh-add ~/.ssh/id_ed25519_github&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;然后将该非对称密钥中的公钥信息复制配置到远程服务端&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;cat ~/.ssh/id_ed25519_github.pub&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;接着在ssh配置文件中指定使用的私钥，如修改配置文件~/.ssh/config：&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;Host github.com 
+    Hostname ssh.github.com
+    Port &lt;span class=&quot;token number&quot;&gt;443&lt;/span&gt;
+    IdentityFile ~/.ssh/id_ed25519_github&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;参考链接&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://help.github.com/articles/using-ssh-over-the-https-port/&quot;&gt;https://help.github.com/articles/using-ssh-over-the-https-port/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.github.com/en/authentication/troubleshooting-ssh/error-permission-denied-publickey&quot;&gt;https://docs.github.com/en/authentication/troubleshooting-ssh/error-permission-denied-publickey&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content:encoded></item><item><title><![CDATA[笔记： 踩坑——Docker使用错误及经验总结]]></title><description><![CDATA[host网络模式 运行Docker容器时，可使用参数来使得可从容器内通过来访问宿主机中运行的其他服务，容器和宿主机将共享网络空间，也无需端口映射配置。 此外，使用host模式在容器内使用localhost或127.0.0.1访问宿主机服务只在Linux中有效。 Mac…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/notes-for-docker-usage/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/notes-for-docker-usage/</guid><pubDate>Sun, 17 Oct 2021 22:48:42 GMT</pubDate><content:encoded>&lt;h3&gt;host网络模式&lt;/h3&gt;
 &lt;p&gt;运行Docker容器时，可使用参数&lt;code class=&quot;language-text&quot;&gt;--network host&lt;/code&gt;来使得可从容器内通过&lt;code class=&quot;language-text&quot;&gt;localhost:&amp;lt;port&amp;gt;&lt;/code&gt;来访问宿主机中运行的其他服务，容器和宿主机将共享网络空间，也无需端口映射配置。&lt;/p&gt;
 &lt;p&gt;此外，使用host模式在容器内使用localhost或127.0.0.1访问宿主机服务只在Linux中有效。&lt;/p&gt;
 &lt;p&gt;Mac或Windows中的Docker Desktop现不支持localhost访问宿主机，但18.08+版本可支持使用host.docker.internal访问宿主机。&lt;/p&gt;
@@ -115,6 +141,25 @@ $ &lt;span class=&quot;token function&quot;&gt;git&lt;/span&gt; --version
 &lt;ol&gt;
 &lt;li&gt;&lt;a href=&quot;https://forums.docker.com/t/build-with-url-error/48638&quot;&gt;https://forums.docker.com/t/build-with-url-error/48638&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://computingforgeeks.com/how-to-install-latest-version-of-git-git-2-x-on-centos-7&quot;&gt;https://computingforgeeks.com/how-to-install-latest-version-of-git-git-2-x-on-centos-7&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content:encoded></item><item><title><![CDATA[笔记： WebAssembly学习笔记]]></title><description><![CDATA[WebAssembly笔记 WebAssembly中支持的数据类型目前只有四种：i32、i64、f32、f64，调用方法传参时如果参数是其他类型，需要在内存中先构建参数然后使用参数指针作为参数。例如字符串参数的每个字符若都作为参数传递，则每个字符需在方法栈中占用…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/webassembly-notes/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/webassembly-notes/</guid><pubDate>Sun, 17 May 2020 12:33:42 GMT</pubDate><content:encoded>&lt;h1&gt;WebAssembly笔记&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;WebAssembly中支持的数据类型目前只有四种：i32、i64、f32、f64，调用方法传参时如果参数是其他类型，需要在内存中先构建参数然后使用参数指针作为参数。例如字符串参数的每个字符若都作为参数传递，则每个字符需在方法栈中占用4个字节，空间利用率低下，另外参数体积可能不定长，也不利于方法调用。&lt;/li&gt;
+&lt;li&gt;WebAssembly内存中总是使用小端模式表示整数/浮点数，无论真实机器是大端还是小端模式。因此若是宿主环境直接从WebAssembly内存中读取整数/浮点数，需要注意根据宿主环境的大小端模式去手动转换数据，因此最好还是通过WebAssembly中的方法返回相应数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;参考链接&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://rsms.me/wasm-intro#addressing-memory&quot;&gt;https://rsms.me/wasm-intro#addressing-memory&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content:encoded></item><item><title><![CDATA[笔记： 对数据结构内存对齐的一点总结]]></title><description><![CDATA[益处 数据读取速度：CPU读取内存数据时，可一次读相应寄存器容量（即word…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/memory-alignment/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/memory-alignment/</guid><pubDate>Sun, 17 May 2020 12:13:42 GMT</pubDate><content:encoded>&lt;h2&gt;益处&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;数据读取速度：&lt;/strong&gt;CPU读取内存数据时，可一次读相应寄存器容量（即word字大小，通常为偶数字节数）的数据量到寄存器里，若指针地址值不是寄存器容量倍数（未对齐地址），也要从更低一点的地址（对齐地址）开始读，若没有对复杂数据对象中的属性数据进行内存对齐，则读取属性数据时可能需要多次读取以及截取合并操作，这会影响程序执行效率。在未对齐情况下，读取单次数据粒度越大，效率将越低。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;节省硬件资源：&lt;/strong&gt;当非对齐地址访问数据时，需要额外晶体管来负责处理，将占用宝贵资源。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;数据读取原子性：&lt;/strong&gt;内存对齐可以减少跨操作读取单个属性数据的发生，导致数据读取过程被其异常或其他操作指令打断，进而有利于读取数据操作的原子性及程序执行的正确性。&lt;/p&gt;
+&lt;h2&gt;参考链接&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://cs.stackexchange.com/questions/68660/what-is-the-relation-between-word-size-and-size-of-internal-register-of-a-proces&quot;&gt;https://cs.stackexchange.com/questions/68660/what-is-the-relation-between-word-size-and-size-of-internal-register-of-a-proces&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developer.ibm.com/articles/pa-dalign&quot;&gt;https://developer.ibm.com/articles/pa-dalign&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/381244/purpose-of-memory-alignment&quot;&gt;https://stackoverflow.com/questions/381244/purpose-of-memory-alignment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://en.wikipedia.org/wiki/Data_structure_alignment&quot;&gt;https://en.wikipedia.org/wiki/Data_structure_alignment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://www.geeksforgeeks.org/data-structure-alignment/&quot;&gt;https://www.geeksforgeeks.org/data-structure-alignment/&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;</content:encoded></item><item><title><![CDATA[双向身份验证HTTPS/TLS连接试验]]></title><description><![CDATA[试验如何在客户端与服务端之间建立需双向身份验证的HTTPS/TLS连接。 试验工具与环境 OS：  Win10 x64: 运行Chrome ArchLinux x64: 运行OpenSSL,NodeJS客户端,NodeJS服务端 OpenSSL：1.1.1c Chrome：8…]]></description><link>https://gatsby-starter-blog-demo.netlify.com/tls-mutual-authentication/</link><guid isPermaLink="false">https://gatsby-starter-blog-demo.netlify.com/tls-mutual-authentication/</guid><pubDate>Fri, 13 Mar 2020 12:40:32 GMT</pubDate><content:encoded>&lt;p&gt;试验如何在客户端与服务端之间建立需双向身份验证的HTTPS/TLS连接。&lt;/p&gt;
 &lt;h2&gt;试验工具与环境&lt;/h2&gt;
 &lt;ul&gt;
